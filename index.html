@@ -594,20 +594,7 @@
   }
 }
 
-  function loadWriteup(url) {
-    fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error("Failed to load");
-        return response.text();
-      })
-      .then(html => {
-        document.getElementById("writeup-content").innerHTML = html;
-      })
-      .catch(error => {
-        document.getElementById("writeup-content").innerHTML = 
-          `<p style="color:red;">Failed to load writeup: ${error}</p>`;
-      });
-  }
+
 
 
   </script>
