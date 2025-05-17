@@ -424,12 +424,17 @@
       </div>
     </div>
     <div id="writeups" class="hidden">
-      <h1>Writeups</h1>
-      <p>Writeups for CTFs, projects, and research.</p>
-      <ul class="writeup-list">
-        <li>TryHackMe Easy Peasy <a href="writeuppage/easypeasy.html" target="_blank">Writeup</a></li>
-      </ul>
-    </div>
+  <h1>Writeups</h1>
+  <p>Writeups for CTFs, projects, and research.</p>
+  <ul class="writeup-list">
+    <li>
+      TryHackMe Easy Peasy 
+      <a href="#" onclick="loadWriteup('writeuppage/easypeasy.html')">View</a>
+    </li>
+  </ul>
+  <div id="writeup-content" style="margin-top: 30px;"></div>
+</div>
+
     <div id="arts" class="hidden">
       <h1>Random BS</h1>
       <p>Just everything I do as my hobbies.</p>
@@ -590,6 +595,21 @@
     event.target.value = "";
   }
 }
+
+  function loadWriteup(url) {
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to load");
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById("writeup-content").innerHTML = html;
+      })
+      .catch(error => {
+        document.getElementById("writeup-content").innerHTML = 
+          `<p style="color:red;">Failed to load writeup: ${error}</p>`;
+      });
+  }
 
 
   </script>
