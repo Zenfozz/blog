@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio</title>
+  <style>
+    :root {
+      --bg-dark: #0f111a;
+      --bg-light: #1a1c29;
+      --accent: #00ffae;
+      --text-light: #e0e0e0;
+      --text-muted: #a0a3b5;
+      --hover-bg: #23263a;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: var(--bg-light);
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      border-right: 1px solid #2a2c3c;
+      justify-content: space-between;
+      flex-shrink: 0; /* Prevent shrinking */
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar button {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      padding: 12px 20px;
+      text-align: left;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar button:hover {
+      background-color: var(--hover-bg);
+      color: var(--accent);
+    }
+    
+    .sidebar button.active {
+  background-color: var(--hover-bg);
+  color: var(--accent);
+}
+
+
+    .submenu {
+      padding-left: 10px;
+      display: none;
+      flex-direction: column;
+    }
+
+    .content {
+      flex-grow: 1;
+      padding: 30px;
+      background-color: var(--bg-dark);
+      overflow-y: auto;
+      min-width: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h1 {
+      color: var(--accent);
+    }
+
+    p {
+      color: var(--text-muted);
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .arrow.down {
+      transform: rotate(90deg);
+    }
+
+    .about-container {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .about-photo {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+    }
+
+    .about-text {
+      max-width: 600px;
+    }
+
+    .expandable {
+      margin-top: 20px;
+    }
+
+    .expandable button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .expandable-content {
+      display: none;
+      margin-top: 10px;
+      color: var(--text-muted);
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .media-grid img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid var(--hover-bg);
+    }
+
+   .media-grid video {
+     width: 100%;
+     max-width: 480px;
+     max-height: 270px;
+     height: auto;
+     border-radius: 10px;
+     object-fit: cover;
+     border: 2px solid var(--hover-bg);
+     margin: 0 auto;
+     display: block;
+    }
+
+    .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    justify-content: center;
+    align-items: center;
+   }
+
+  .lightbox img {
+  width: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  border: 3px solid black;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); /* optional soft glow */
+  }
+
+ 
+
+   .lightbox:target {
+    display: flex;
+   }
+
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      padding: 15px;
+      gap: 15px;
+      border-top: 1px solid #2a2c3c;
+    }
+
+    .social-icons a {
+      color: var(--text-muted);
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .social-icons a:hover {
+      color: var(--accent);
+    }
+
+    .rotate {
+      transition: transform 0.3s ease;
+    }
+
+    .rotate.down {
+      transform: rotate(90deg);
+    }
+
+    .writeup-list li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .writeup-list a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .writeup-list a:hover {
+      text-decoration: underline;
+    }
+    .terminal-sim {
+  margin-top: 30px;
+  font-family: monospace;
+  color: var(--text-light);
+}
+
+.terminal-sim label {
+  margin-right: 8px;
+}
+ .sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.sidebar-credit {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+
+#terminal-input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+  color: var(--text-light);
+  font-size: 16px;
+  width: 300px;
+  padding: 4px;
+  outline: none;
+}
+
+#terminal-output {
+  margin-top: 10px;
+  color: var(--text-muted);
+  white-space: pre-line;
+}
+
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+  <div class="sidebar-nav">
+    <button onclick="showPage('home')">Home</button>
+    <button onclick="showPage('about')">About Me</button>
+    <button onclick="toggleSubmenu()">
+      Works <span id="arrow" class="arrow">▸</span>
+    </button>
+    <div class="submenu" id="works-submenu">
+      <button onclick="showPage('toolbox')">Toolbox</button>
+      <button onclick="showPage('writeups')">Writeups</button>
+      <button onclick="showPage('arts')">Random BS</button>
+    </div>
+  </div>
+
+  <!-- Footer Section Start -->
+  <div class="sidebar-footer">
+    <div class="sidebar-credit">© 2025 Created by Zenfozz</div>
+    <div class="social-icons">
+      <a href="https://github.com/zenfozz" target="_blank" title="GitHub"><img src="assets/github.jpg" style="width: 24px; height: 24px; border-radius: 50%;" alt="GitHub"></a>
+      <a href="https://tryhackme.com/p/Zenfozz" target="_blank" title="TryHackMe"><img src="assets/thm.png" style="width: 24px; height: 24px; border-radius: 50%;" alt="TryHackMe"></a>
+      <a href="https://t.me/Zenfozz" target="_blank" title="Telegram"><img src="assets/telegram.png" style="width: 24px; height: 24px; border-radius: 50%;" alt="Telegram"></a>
+    </div>
+  </div>
+  <!-- Footer Section End -->
+</div>
+
+  <div class="content">
+    <div id="home">
+      <h1>Welcome to My Terminal</h1>
+      <p>Welcome to my blog. This is where I upload every random things in my mind.</p>
+      <div class="terminal-sim">
+      <label for="terminal-input">&gt;_</label>
+      <input type="text" id="terminal-input" autocomplete="off" placeholder="Type a command..." onkeydown="handleCommand(event)">
+      <div id="terminal-output"></div>
+    </div>
+
+    </div>
+    <div id="about" class="hidden">
+      <h1>About Me</h1>
+      <div class="about-container">
+        <img src="assets/rocket.jpg" alt="My Photo" class="about-photo">
+        <div class="about-text">
+          <p>Hi, I am Zenfozz! I am currently a second year student at the University of Computer Studies, Yangon. I am considering to choose Cyber Security as my main focus and selfstudying most of it.</p>
+        </div>
+      </div>
+      <div class="expandable">
+        <button onclick="toggleExpand('experience', this)"><span class="rotate">▶</span> Work Experiences</button>
+        <div id="experience" class="expandable-content">
+          <p>July 2023 - present</p>
+	  <p>I currently work as a part-time Junior Burmese-Chinese translator, assisting a small local company with document and conversation translations during university semester breaks.</p>
+	  <p>Since birth - present</p>
+	  <p>Certified Mama boy.</p>
+        </div>
+      </div>
+      <div class="expandable">
+        <button onclick="toggleExpand('certificates', this)"><span class="rotate">▶</span> Certificates</button>
+        <div id="certificates" class="expandable-content">
+          <p>Lover-Boy Expert</p>
+        </div>
+      </div>
+	<div class="expandable">
+        <button onclick="toggleExpand('contact me', this)"><span class="rotate">▶</span> Contact me</button>
+        <div id="contact me" class="expandable-content">
+          <p>totallynotzenfozz@gmail.com</p>
+        </div>
+      </div>
+    </div>
+    <div id="toolbox" class="hidden">
+      <h1>Toolbox</h1>
+      <p>This page includes important notes of tools and commands. Might not be 100% accurate.</p>
+
+      <div class="expandable">
+        <button onclick="toggleExpand('bettercap', this)"><span class="rotate">▶</span> Bettercap - man-in-the-middle/network sniffing/packet manipulation</button>
+        <div id="bettercap" class="expandable-content">
+	<ul class="writeup-list">
+        <li>sudo bettercap		-start bettercap</li>
+        <li>net.probe on		-sends probes to discover hosts</li>
+	<li>net.recon on		-discover host(slower but more thorough)</li>
+        <li>net.show    		-show discovered hosts</li>
+	<li>set net.sniff.targets <target ip>   -set target for sniffing</li>
+	<li>net.sniff on		-sniff the target(capture packets)</li>
+	<li>set arp.spoof.targets <target ip>   -set target for arp spoofing</li>
+	<li>arp.spoof on		-spoof arp to intercept traffic</li>
+	<li>set dns.spoof.domains <domain.com>  -set domain for domain spoofing</li>
+	<li>dns.spoof on		-spoof dns to redirect traffic</li>
+	<li>sessions			-show running modules</li>
+	<li>net.probe off/net.recon off/arp.spoof off/net.sniff off/dns.spoof off -stop modules</li>
+        </ul>
+        </div>
+
+      </div>
+    </div>
+    <div id="writeups" class="hidden">
+      <h1>Writeups</h1>
+      <p>Writeups for CTFs, projects, and research.</p>
+      <ul class="writeup-list">
+        <li>TryHackMe Easy Pease <a href="writeuppage/easypeasy.html" target="_blank">Writeup</a></li>
+      </ul>
+    </div>
+    <div id="arts" class="hidden">
+      <h1>Random BS</h1>
+      <p>Just everything I do as my hobbies.</p>
+      <h2>Photos</h2>
+      <p>Some artworks I am proud of.</p>
+      <div class="media-grid">
+       <a href="#img1"><img src="assets/art1.png" alt="Art 1"></a>
+       <a href="#img2"><img src="assets/art2.png" alt="Art 2"></a>
+       <a href="#img3"><img src="assets/art3.png" alt="Art 3"></a>
+      </div>
+
+   <div id="img1" class="lightbox">
+     <a href="#"><img src="assets/art1.png" alt="Art 1"></a>
+   </div>
+   <div id="img2" class="lightbox">
+    <a href="#"><img src="assets/art2.png" alt="Art 2"></a>
+   </div>
+   <div id="img3" class="lightbox">
+    <a href="#"><img src="assets/art3.png" alt="Art 3"></a>
+   </div>
+
+      <h2>Videos</h2>
+      <p>This is a game I tried to develop with Gdevelop months ago (Nothing serious though). Already dropped the project but worth mentioning since every things here are done by myself.</p>
+      <br>
+      <div class="media-grid">
+        <video controls src="assets/gamerecord.mp4"></video>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPage(pageId) {
+  const pages = document.querySelectorAll('.content > div');
+  pages.forEach(page => page.classList.add('hidden'));
+  document.getElementById(pageId).classList.remove('hidden');
+
+  // Remove 'active' class from all buttons
+  const buttons = document.querySelectorAll('.sidebar button');
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+  // Add 'active' class to the clicked button
+  const pageToButtonMap = {
+    home: "Home",
+    about: "About Me",
+    toolbox: "Toolbox",
+    writeups: "Writeups",
+    arts: "Random BS"
+  };
+
+  const buttonsArray = Array.from(buttons);
+  const targetLabel = pageToButtonMap[pageId];
+  const targetButton = buttonsArray.find(btn => btn.textContent.trim().startsWith(targetLabel));
+  if (targetButton) {
+    targetButton.classList.add('active');
+  }
+}
+
+
+    function toggleSubmenu() {
+      const submenu = document.getElementById('works-submenu');
+      const arrow = document.getElementById('arrow');
+      const isVisible = submenu.style.display === 'flex';
+
+      submenu.style.display = isVisible ? 'none' : 'flex';
+      arrow.classList.toggle('down', !isVisible);
+    }
+
+    function toggleExpand(id, btn) {
+      const el = document.getElementById(id);
+      const icon = btn.querySelector('.rotate');
+      const expanded = el.style.display === 'block';
+
+      el.style.display = expanded ? 'none' : 'block';
+      icon.classList.toggle('down', !expanded);
+    }
+   function handleCommand(event) {
+  if (event.key === "Enter") {
+    const input = event.target.value.trim();
+    const output = document.getElementById("terminal-output");
+    const lowerInput = input.toLowerCase();
+    output.textContent = ""; // Clear previous output
+
+    // Directory structure
+    const directories = {
+      home: null,
+      "about me": null,
+      works: {
+        toolbox: "toolbox",
+        writeups: "writeups",
+        "random bs": "arts"
+      }
+    };
+
+    // pwd
+    if (lowerInput === "pwd") {
+      output.textContent = "home";
+    } 
+    // whoami
+    else if (lowerInput === "whoami") {
+      output.textContent = "sigma boy";
+    } 
+    // clear
+    else if (lowerInput === "clear") {
+      output.textContent = "";
+    } 
+    // echo
+    else if (lowerInput.startsWith("echo ")) {
+      const echoText = input.slice(5); // use original case-sensitive input
+      output.textContent = echoText;
+    } 
+    // ls
+    else if (lowerInput === "ls") {
+      output.textContent = "home  about me  works";
+    } 
+    else if (lowerInput === "ls works") {
+      output.textContent = "toolbox  writeups  random bs";
+    } 
+    else if (
+      ["ls home", "ls about me", "ls works/toolbox", "ls works/writeups", "ls works/random bs"].includes(lowerInput)
+    ) {
+      output.textContent = "";
+    } 
+    // cd
+    else if (lowerInput.startsWith("cd ")) {
+      const path = lowerInput.slice(3).trim();
+      const parts = path.split("/");
+
+      if (parts.length === 1) {
+        if (["toolbox", "writeups", "random bs"].includes(parts[0])) {
+          output.textContent = "page not found";
+        } else if (parts[0] === "works") {
+          output.textContent = "works is a directory and doesn't have a page";
+        } else if (["home", "about me"].includes(parts[0])) {
+          const targetPage = parts[0] === "about me" ? "about" : parts[0];
+          showPage(targetPage);
+          output.textContent = `navigated to ${parts[0]}`;
+        } else {
+          output.textContent = `command not found: cd ${path}`;
+        }
+      } else if (parts.length === 2 && parts[0] === "works") {
+        const sub = parts[1];
+        if (directories.works[sub]) {
+          showPage(directories.works[sub]);
+          output.textContent = `navigated to ${sub}`;
+        } else {
+          output.textContent = `no such directory: ${sub}`;
+        }
+      } else {
+        output.textContent = `invalid path: ${path}`;
+      }
+    } 
+    // fallback
+    else {
+      output.textContent = "Bro, this is NOT an actual Linux machine.";
+    }
+
+    // Clear input
+    event.target.value = "";
+  }
+}
+
+
+  </script>
+</body>
+</html>
