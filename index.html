@@ -406,17 +406,17 @@
         <button onclick="toggleExpand('bettercap', this)"><span class="rotate">▶</span> Bettercap - man-in-the-middle/network sniffing/packet manipulation</button>
         <div id="bettercap" class="expandable-content">
 	<ul class="writeup-list">
-        <li>sudo bettercap		-start bettercap</li>
-        <li>net.probe on		-sends probes to discover hosts</li>
-	<li>net.recon on		-discover host(slower but more thorough)</li>
-        <li>net.show    		-show discovered hosts</li>
-	<li>set net.sniff.targets <target ip>   -set target for sniffing</li>
-	<li>net.sniff on		-sniff the target(capture packets)</li>
-	<li>set arp.spoof.targets <target ip>   -set target for arp spoofing</li>
-	<li>arp.spoof on		-spoof arp to intercept traffic</li>
-	<li>set dns.spoof.domains <domain.com>  -set domain for domain spoofing</li>
-	<li>dns.spoof on		-spoof dns to redirect traffic</li>
-	<li>sessions			-show running modules</li>
+        <li>sudo bettercap		::start bettercap</li>
+        <li>net.probe on		::sends probes to discover hosts</li>
+	<li>net.recon on		::discover host(slower but more thorough)</li>
+        <li>net.show    		::show discovered hosts</li>
+	<li>set net.sniff.targets (target ip)   ::set target for sniffing</li>
+	<li>net.sniff on		::sniff the target(capture packets)</li>
+	<li>set arp.spoof.targets (target ip)   ::set target for arp spoofing</li>
+	<li>arp.spoof on		::spoof arp to intercept traffic</li>
+	<li>set dns.spoof.domains (domain.com)  ::set domain for domain spoofing</li>
+	<li>dns.spoof on		::spoof dns to redirect traffic</li>
+	<li>sessions			::show running modules</li>
 	<li>net.probe off/net.recon off/arp.spoof off/net.sniff off/dns.spoof off -stop modules</li>
         </ul>
         </div>
@@ -424,15 +424,15 @@
         <button onclick="toggleExpand('aircrack-ng', this)"><span class="rotate">▶</span> Aircrack-ng - wifi penetration testing and wireless password cracking</button>
         <div id="aircrack-ng" class="expandable-content">
 	<ul class="writeup-list">
-        <li>airmon-ng start wlan0(or your network interface) - start monitor mode</li>
-        <li>airmon-ng check kill			-kill interfering processes</li>
-	<li>airodump-ng wlan0		  		-scan networks</li>
-	<li>airodump-ng -c (channel number) -w (file name to save) -d (target router's BSSID) wlan0 - captures packets from the target AP on the specified channel, saving to file.</li>
-        <li>aireplay-ng --deauth 0 -a (target router's BSSID) -c (targer device's BSSID) wlan0   -deauthenticate client (to capture handshake) -</li>
-	<li>aircrack-ng (saved file name) -w /path/to/wordlist  	-crack the captured hash</li>	
-	<li>macchanger -r wlan0		-change MAC address</li>
-	<li>airmon-ng stop wlan0	-stop monitor mode</li>
-	<li><strong>Note:</strong>Note: The interface name might change when entering/exiting monitor mode (like from wlan0 to wlan0mon), so check with: iwconfig, you may need to use wlan0mon for subsequent commands.</li>
+        <li>airmon-ng start wlan0(or your network interface) ::start monitor mode</li>
+        <li>airmon-ng check kill			::kill interfering processes</li>
+	<li>airodump-ng wlan0		  		::scan networks</li>
+	<li>airodump-ng -c (channel number) -w (file name to save) -d (target router's BSSID) wlan0 ::captures packets from the target AP on the specified channel, saving to file.</li>
+        <li>aireplay-ng --deauth 0 -a (target router's BSSID) -c (targer device's BSSID) wlan0   ::deauthenticate client (to capture handshake) -</li>
+	<li>aircrack-ng (saved file name) -w /path/to/wordlist  	::crack the captured hash</li>	
+	<li>macchanger -r wlan0		::change MAC address</li>
+	<li>airmon-ng stop wlan0	::stop monitor mode</li>
+	<li><strong>Note:</strong>The interface name might change when entering/exiting monitor mode (like from wlan0 to wlan0mon), so check with: iwconfig, you may need to use wlan0mon for subsequent commands.</li>
         </ul>
         </div>
 
